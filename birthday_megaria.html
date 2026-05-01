@@ -1,0 +1,297 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Joyeux Anniversaire M&eacute;garia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--gold:#C9A96E;--gold-light:#E8D5A3;--dark:#080808;--dark2:#111111;--dark3:#1A1A1A;--cream:#F7F2EC;--muted:rgba(247,242,236,0.55);--serif:'Cormorant Garamond',Georgia,serif;--sans:'DM Sans',sans-serif}
+  html{scroll-behavior:smooth}
+  body{background:var(--dark);color:var(--cream);font-family:var(--sans);overflow-x:hidden}
+
+  /* HERO */
+  .hero{position:relative;height:100vh;min-height:600px;display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
+  .hero-slide{position:absolute;inset:0;opacity:0;transition:opacity .5s ease}
+  .hero-slide.active{opacity:1}
+  .hero-slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;filter:brightness(0.45)}
+  .hero-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(8,8,8,0) 0%,rgba(8,8,8,0) 35%,rgba(8,8,8,0.72) 72%,rgba(8,8,8,1) 100%)}
+  .hero-content{position:relative;z-index:2;text-align:center;padding:0 24px 80px}
+  .hero-eyebrow{font-size:11px;letter-spacing:.38em;text-transform:uppercase;color:var(--gold);margin-bottom:24px;opacity:0;animation:fadeUp 1s .6s both ease-out}
+  .hero-name{font-family:var(--serif);font-size:clamp(64px,13vw,148px);font-weight:300;line-height:.9;letter-spacing:-.02em;color:var(--cream);margin-bottom:20px;opacity:0;animation:fadeUp 1s .9s both ease-out}
+  .hero-name em{font-style:italic;color:var(--gold-light)}
+  .hero-sub{font-family:var(--serif);font-size:clamp(16px,3vw,26px);font-weight:300;font-style:italic;color:var(--muted);opacity:0;animation:fadeUp 1s 1.2s both ease-out}
+  .scroll-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeIn 1s 2.2s both}
+  .scroll-hint span{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+  .scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrollPulse 2s ease-in-out infinite}
+  @keyframes scrollPulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+  /* COUNTDOWN OVERLAY */
+  #countdown-overlay{position:fixed;inset:0;background:var(--dark);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;transition:opacity .8s ease}
+  #countdown-overlay.hidden{opacity:0;pointer-events:none}
+  #countdown-overlay .ov-label{font-size:11px;letter-spacing:.45em;text-transform:uppercase;color:var(--gold)}
+  #countdown-overlay .ov-num{font-family:var(--serif);font-size:clamp(100px,25vw,220px);font-weight:300;line-height:1;color:var(--cream);position:relative}
+  #countdown-overlay .ov-num::after{content:'';position:absolute;bottom:-8px;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent)}
+  #countdown-overlay .ov-sub{font-family:var(--serif);font-size:clamp(16px,3vw,24px);font-style:italic;color:var(--muted)}
+
+  /* SECTION LABEL */
+  .section-label{font-size:10px;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:48px;display:flex;align-items:center;gap:16px}
+  .section-label::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--gold),transparent);max-width:80px}
+
+  /* LETTER */
+  .letter-section{padding:120px 24px;max-width:780px;margin:0 auto;opacity:0;transform:translateY(40px);transition:all .9s ease-out}
+  .letter-section.visible{opacity:1;transform:translateY(0)}
+  .letter-intro{font-family:var(--serif);font-size:clamp(30px,5.5vw,60px);font-weight:300;line-height:1.15;margin-bottom:48px}
+  .letter-intro em{font-style:italic;color:var(--gold-light)}
+  .letter-body{font-family:var(--serif);font-size:clamp(16px,2vw,21px);font-weight:300;line-height:1.85;color:rgba(247,242,236,.8)}
+  .letter-body p+p{margin-top:28px}
+
+  /* QUALITIES */
+  .qualities-section{padding:100px 24px;background:var(--dark2);border-top:1px solid rgba(201,169,110,.12);border-bottom:1px solid rgba(201,169,110,.12)}
+  .qualities-inner{max-width:1100px;margin:0 auto}
+  .qualities-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2px;margin-top:48px}
+  .quality-card{padding:48px 36px;background:var(--dark3);opacity:0;transform:translateY(30px);transition:all .7s ease-out;position:relative;overflow:hidden}
+  .quality-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:0;background:var(--gold);transition:height .5s ease}
+  .quality-card:hover::before{height:100%}
+  .quality-card.visible{opacity:1;transform:translateY(0)}
+  .quality-num{font-family:var(--serif);font-size:48px;font-weight:300;font-style:italic;color:rgba(201,169,110,.2);display:block;margin-bottom:12px;transition:color .4s}
+  .quality-card:hover .quality-num{color:rgba(201,169,110,.5)}
+  .quality-title{font-family:var(--serif);font-size:22px;font-weight:400;color:var(--gold-light);display:block;margin-bottom:10px}
+  .quality-desc{font-size:14px;font-weight:300;color:var(--muted);line-height:1.6}
+
+  /* GALLERY */
+  .gallery-section{padding:120px 24px;max-width:1400px;margin:0 auto}
+  .gallery-hover-scroll{position:relative;overflow:hidden;margin-top:48px;cursor:crosshair;height:480px}
+  .gallery-strip{display:flex;gap:12px;height:100%;transition:transform .3s ease-out;will-change:transform}
+  .gallery-card{flex:0 0 340px;height:100%;overflow:hidden}
+  .gallery-card img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(20%);transition:filter .5s ease,transform .5s ease}
+  .gallery-card:hover img{filter:grayscale(0%);transform:scale(1.03)}
+  .gallery-hint{text-align:center;font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-top:20px;opacity:.6}
+
+  /* VIDEO */
+  .video-section{padding:80px 24px 120px;max-width:860px;margin:0 auto;text-align:center;opacity:0;transform:translateY(40px);transition:all .9s ease-out}
+  .video-section.visible{opacity:1;transform:translateY(0)}
+  .video-title{font-family:var(--serif);font-size:clamp(26px,5vw,42px);font-weight:300;font-style:italic;margin-bottom:10px}
+  .video-subtitle{font-size:13px;letter-spacing:.15em;color:var(--muted);margin-bottom:40px}
+  .video-wrapper{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:var(--dark3)}
+  .video-wrapper video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+
+  /* CLOSING */
+  .closing-section{padding:120px 24px;text-align:center;position:relative;overflow:hidden;border-top:1px solid rgba(201,169,110,.1)}
+  .closing-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(201,169,110,.08) 0%,transparent 70%);pointer-events:none}
+  .closing-big{font-family:var(--serif);font-size:clamp(48px,10vw,110px);font-weight:300;line-height:1;margin-bottom:16px;opacity:0;transform:translateY(30px);transition:all 1s ease-out}
+  .closing-big.visible{opacity:1;transform:translateY(0)}
+  .closing-big em{font-style:italic;color:var(--gold)}
+  .closing-name{font-family:var(--serif);font-size:clamp(52px,11vw,130px);font-weight:300;font-style:italic;color:var(--gold-light);line-height:1;margin-bottom:48px;opacity:0;transform:translateY(30px);transition:all 1s .2s ease-out}
+  .closing-name.visible{opacity:1;transform:translateY(0)}
+  .gold-divider{width:60px;height:1px;background:var(--gold);margin:40px auto;opacity:0;transition:opacity .8s .4s ease}
+  .gold-divider.visible{opacity:.6}
+  .closing-from{font-size:13px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);opacity:0;transition:opacity 1s .5s ease}
+  .closing-from.visible{opacity:1}
+
+  #confetti-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999;display:none}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+  /* RESPONSIVE MOBILE */
+  @media(max-width:768px){
+    .hero{min-height:500px}
+    .hero-content{padding:0 20px 56px}
+    .scroll-hint{display:none}
+    .letter-section{padding:64px 20px}
+    .letter-intro{margin-bottom:28px}
+    .qualities-section{padding:60px 0}
+    .qualities-inner{padding:0}
+    .quality-card{padding:32px 24px}
+    .qualities-grid{grid-template-columns:1fr;gap:2px}
+    .gallery-section{padding:64px 0}
+    .gallery-hover-scroll{height:260px;overflow-x:auto;overflow-y:hidden;cursor:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory}
+    .gallery-strip{transform:none !important;transition:none;padding:0 16px}
+    .gallery-card{flex:0 0 72vw;scroll-snap-align:start}
+    .gallery-hint{display:none}
+    .video-section{padding:48px 20px 72px}
+    .closing-section{padding:80px 20px}
+    .section-label{margin-bottom:32px;padding:0 20px}
+  }
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+
+<div id="countdown-overlay">
+  <span class="ov-label">&#10022; Joyeux Anniversaire &#10022;</span>
+  <span class="ov-num" id="ov-count">10</span>
+  <span class="ov-sub">M&eacute;garia Borisia</span>
+</div>
+
+<div class="hero">
+  <div class="hero-slide active"><img src="Photo6.jpeg" alt="" style="object-position:center 5%"></div>
+  <div class="hero-slide"><img src="Photo9.jpeg" alt="" style="object-position:center 10%"></div>
+  <div class="hero-slide"><img src="Photo7.jpeg" alt="" style="object-position:center 10%"></div>
+  <div class="hero-slide"><img src="Photo11.jpeg" alt="" style="object-position:center 8%"></div>
+  <div class="hero-slide"><img src="Photo6.jpeg" alt="" style="object-position:center 5%"></div>
+  <div class="hero-slide"><img src="Photo10.jpeg" alt="" style="object-position:center 5%"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">02 Mai &middot; Joyeux Anniversaire</p>
+    <h1 class="hero-name">M&eacute;ga<em>ria</em></h1>
+    <p class="hero-sub">La grande s&oelig;ur que la vie m&rsquo;a offerte</p>
+  </div>
+</div>
+
+<div class="letter-section" data-observe>
+  <div class="section-label">Un mot du c&oelig;ur</div>
+  <h2 class="letter-intro">&Agrave; toi, <em>M&eacute;garia</em> &mdash;<br>ma grande s&oelig;ur, mon mod&egrave;le.</h2>
+  <div class="letter-body">
+    <p>Tu n&rsquo;as pas besoin d&rsquo;un grand discours pour savoir &agrave; quel point tu comptes. Tout ce que tu es &mdash; ta g&eacute;n&eacute;rosit&eacute; sans condition, ton sourire qui &eacute;claire les pi&egrave;ces, ta fa&ccedil;on de toujours agir en grande &mdash; tout &ccedil;a, je le vis chaque jour &agrave; tes c&ocirc;t&eacute;s.</p>
+    <p>Ce petit site, c&rsquo;est ma fa&ccedil;on de te dire ce que les mots simples ne suffisent pas &agrave; exprimer. Tu m&eacute;rites le monde entier, et si je pouvais te l&rsquo;offrir, tu l&rsquo;aurais d&eacute;j&agrave;. En attendant, je t&rsquo;offre ce que j&rsquo;ai de mieux&nbsp;: mon code et tout mon amour.</p>
+    <p>Joyeux anniversaire, grande s&oelig;ur. Que cette nouvelle ann&eacute;e de ta vie soit &agrave; la hauteur de tout ce que tu donnes aux autres.</p>
+  </div>
+</div>
+
+<div class="qualities-section">
+  <div class="qualities-inner">
+    <div class="section-label">Ce qui te d&eacute;finit</div>
+    <div class="qualities-grid">
+      <div class="quality-card" data-observe-card><span class="quality-num">01</span><span class="quality-title">G&eacute;n&eacute;reuse</span><p class="quality-desc">Tu donnes sans compter, m&ecirc;me quand personne ne te le demande.</p></div>
+      <div class="quality-card" data-observe-card><span class="quality-num">02</span><span class="quality-title">Lumineuse</span><p class="quality-desc">Ton sourire transforme chaque moment en souvenir inoubliable.</p></div>
+      <div class="quality-card" data-observe-card><span class="quality-num">03</span><span class="quality-title">Aimante</span><p class="quality-desc">Tu aimes avec une intensit&eacute; rare. Ceux qui t&rsquo;ont dans leur vie ont de la chance.</p></div>
+      <div class="quality-card" data-observe-card><span class="quality-num">04</span><span class="quality-title">Mature</span><p class="quality-desc">Tu penses grand, tu vois loin. Toujours la grande s&oelig;ur, en tout.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="gallery-section" data-observe>
+  <span class="section-label">Galerie</span>
+  <div class="gallery-hover-scroll" id="gallery-hover">
+    <div class="gallery-strip" id="gallery-strip">
+      <div class="gallery-card"><video controls preload="metadata" style="width:100%;height:100%;object-fit:cover;display:block"><source src="Video2 (1).mp4" type="video/mp4"></video></div>
+      <div class="gallery-card"><img src="Photo1.jpeg" alt=""></div>
+      <div class="gallery-card"><img src="Photo2.jpeg" alt=""></div>
+      <div class="gallery-card"><img src="Photo3.jpeg" alt=""></div>
+      <div class="gallery-card"><img src="Photo4.jpeg" alt=""></div>
+      <div class="gallery-card"><img src="Photo5.jpeg" alt=""></div>
+      <div class="gallery-card"><img src="Photo6.jpeg" alt=""></div>
+      <div class="gallery-card"><img src="Photo7.jpeg" alt=""></div>
+      <div class="gallery-card"><img src="Photo8.jpeg" alt=""></div>
+      <div class="gallery-card"><video controls preload="metadata" style="width:100%;height:100%;object-fit:cover;display:block"><source src="Video3.mp4" type="video/mp4"></video></div>
+    </div>
+  </div>
+  <p class="gallery-hint">&#10022; Survoler pour d&eacute;filer &#10022;</p>
+</div>
+
+<div class="video-section" data-observe>
+  <div class="section-label" style="justify-content:center">Un petit moment</div>
+  <h3 class="video-title">Parce que tu sais aussi faire rire</h3>
+  <p class="video-subtitle">Elle est s&eacute;rieuse... sauf quand elle ne l&rsquo;est pas</p>
+  <div class="video-wrapper">
+    <video controls preload="metadata">
+      <source src="WhatsApp Video 2026-05-01 at 18.30.05.mp4" type="video/mp4">
+    </video>
+  </div>
+</div>
+
+<div class="closing-section">
+  <div class="closing-glow"></div>
+  <p class="closing-big" data-observe>Bonne<em> f&ecirc;te</em></p>
+  <p class="closing-name" data-observe>M&eacute;garia</p>
+  <div class="gold-divider" data-observe></div>
+  <p class="closing-from" data-observe>Avec tout l&rsquo;amour de tes petites s&oelig;urs &#10022; Reine du 02 Mai</p>
+</div>
+
+<script>
+// COMPTE A REBOURS 10 SECONDES
+(function(){
+  const overlay = document.getElementById('countdown-overlay');
+  const ovCount = document.getElementById('ov-count');
+  let seconds = 10;
+  function tick(){
+    ovCount.textContent = seconds;
+    if(seconds <= 0){
+      clearInterval(timer);
+      launchConfetti();
+      setTimeout(function(){
+        overlay.classList.add('hidden');
+        setTimeout(function(){ overlay.style.display='none'; }, 900);
+      }, 1200);
+    }
+    seconds--;
+  }
+  tick();
+  const timer = setInterval(tick, 1000);
+})();
+
+// HERO SLIDESHOW — change de photo toutes les 3.5s, transition 0.5s
+(function(){
+  const slides = document.querySelectorAll('.hero-slide');
+  if(slides.length < 2) return;
+  let current = 0;
+  setInterval(function(){
+    slides[current].classList.remove('active');
+    current = (current + 1) % slides.length;
+    slides[current].classList.add('active');
+  }, 3500);
+})();
+
+// GALERIE — survol souris (desktop) ou glisser (mobile)
+(function(){
+  const hoverEl = document.getElementById('gallery-hover');
+  const stripEl = document.getElementById('gallery-strip');
+  if(!hoverEl || !stripEl) return;
+  if(!window.matchMedia('(hover: hover)').matches) return;
+  hoverEl.addEventListener('mousemove', function(e){
+    const rect = hoverEl.getBoundingClientRect();
+    const ratio = (e.clientX - rect.left) / rect.width;
+    const maxScroll = stripEl.scrollWidth - rect.width;
+    stripEl.style.transform = 'translateX(-' + Math.max(0, ratio * maxScroll) + 'px)';
+  });
+  hoverEl.addEventListener('mouseleave', function(){
+    stripEl.style.transform = 'translateX(0)';
+  });
+})();
+
+function launchConfetti(){
+  const canvas=document.getElementById('confetti-canvas');
+  canvas.style.display='block';
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  const colors=['#C9A96E','#E8D5A3','#F7F2EC','#ffffff','#d4a843','#f0e0a0'];
+  const parts=Array.from({length:220},function(){return{
+    x:Math.random()*canvas.width,y:-10,
+    r:Math.random()*8+4,color:colors[Math.floor(Math.random()*colors.length)],
+    vy:Math.random()*4+2,vx:(Math.random()-.5)*3,
+    rot:Math.random()*360,rv:(Math.random()-.5)*6
+  };});
+  let frame=0;
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    parts.forEach(function(p){
+      p.y+=p.vy;p.x+=p.vx;p.rot+=p.rv;p.vy+=0.06;
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.color;ctx.globalAlpha=Math.max(0,1-frame/260);
+      ctx.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);ctx.restore();
+    });
+    frame++;
+    if(frame<320)requestAnimationFrame(draw);
+    else{canvas.style.display='none';ctx.clearRect(0,0,canvas.width,canvas.height);}
+  }
+  draw();
+}
+
+const obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+},{threshold:.15});
+document.querySelectorAll('[data-observe]').forEach(function(el){obs.observe(el);});
+
+const cardObs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e,i){
+    if(e.isIntersecting){setTimeout(function(){e.target.classList.add('visible');},i*90);cardObs.unobserve(e.target);}
+  });
+},{threshold:.1});
+document.querySelectorAll('[data-observe-card]').forEach(function(el){cardObs.observe(el);});
+</script>
+</body>
+</html>
